@@ -1,0 +1,73 @@
+function [zValues,outputStatistics] = ...
+      findEmbeddings(projections,trainingData,trainingEmbedding,parameters)
+%findEmbeddings finds the optimal embedding of a data set into a previously
+%found t-SNE embedding
+%
+%   Input variables:
+%
+%       projections -> N x (pcaModes x numPeriods) array of projection values
+%       trainingData -> Nt x (pcaModes x numPeriods) array of wavelet 
+%                       amplitudes containing Nt data points
+%       trainingEmbedding -> Nt x 2 array of embeddings
+%       parameters -> struct containing non-default choices for parameters
+%
+%
+%   Output variables:
+%
+%       zValues -> N x 2 array of embedding results
+%       outputStatistics -> struct containing embedding outputs
+%
+%
+% (C) Gordon J. Berman, 2014
+%     Princeton University
+
+    addpath(genpath('./utilities/'));
+    addpath(genpath('./t_sne/'));
+    
+    
+    if nargin < 4
+        parameters = [];
+    end
+    parameters = setRunParameters(parameters);
+    
+    
+    
+    if matlabpool('size') ~= parameters.numProcessors;
+        matlabpool close force
+        if parameters.numProcessors > 1
+            matlabpool(parameters.numProcessors);
+        end
+    end
+    
+    
+    
+    d = length(trainingData(1,:));
+    numModes = d / parameters.numPeriods;
+    
+    fprintf(1,'Finding Wavelets\n');
+    [data,f] = findWavelets(projections,numModes,parameters);
+    data = bsxfun(@rdivide,data,sum(data,2));
+    
+    
+    fprintf(1,'Finding Embeddings\n');   
+    [zValues,zCosts,zGuesses,inConvHull,meanMax,exitFlags] = ...
+        findTDistributedProjections_fmin(data,trainingData,...
+                                    trainingEmbedding,parameters);
+    
+    
+                                
+    outputStatistics.zCosts = zCosts;
+    outputStatistics.f = f;
+    outputStatistics.numModes = numModes;
+    outputStatistics.zGuesses = zGuesses;
+    outputStatistics.inConvHull = inConvHull;
+    outputStatistics.meanMax = meanMax;
+    outputStatistics.exitFlags = exitFlags;
+    
+    
+                                
+                                
+    
+    if parameters.numProcessors > 1  && parameters.closeMatPool
+        matlabpool close
+    end

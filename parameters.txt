@@ -1,0 +1,183 @@
+    
+A listing of all parameters and their default values.  Default values can be altered within setRunParameters.m.  How to change parameters on a run-by-run basis is shown in runExample.m.
+
+
+
+
+    %%%%%%%% General Parameters %%%%%%%%
+
+
+    %number of processors to use in parallel code
+    numProcessors = 12;
+    
+    %whether or not to close the matlabpool after running a routine
+    closeMatPool = false;
+    
+    
+    
+    
+    
+    %%%%%%%% Segmentation and Alignment Parameters %%%%%%%%
+    
+    %angle spacing for alignement Radon transform
+    alignment_angle_spacing = 1;
+    
+    %tolerance for translational alignment
+    pixelTol = .1;
+    
+    %minimum area for use in image dilation/erosion
+    minArea = 3500;
+    
+    %asymmetry threshold used in eliminating rotational degeneracy
+    asymThreshold = 150;
+    
+    %line about which directional symmetry is 
+    %determined for eliminating rotational degeneracy
+    symLine = 110;
+    
+    %initial guess for rotation angle
+    initialPhi = 0;
+
+    %initial dilation size for image segmentation
+    dilateSize = 5;
+
+    %parameter for Canny edge detection
+    cannyParameter = .1;
+
+   %threshold for image segmentation
+    imageThreshold = 40;
+
+    %largest allowed percentage reduction in area from frame to frame
+    maxAreaDifference = .15;
+
+    %toggle switch for image segmentation (alignment still performed)
+    segmentationOff = false;
+    
+    %threshold for seperating body from background
+    bodyThreshold = 150;
+
+    
+    
+    
+    %%%%%%%% PCA Parameters %%%%%%%% 
+    
+    %number of angles in radon transform
+    num_Radon_Thetas = 90;
+    
+    %image scaling factor
+    rescaleSize = 10/7;
+    
+    %batch size for running online PCA
+    pca_batchSize = 20000;
+    
+    %number of projections to find in PCA
+    numProjections = 100;
+    
+    %number of PCA modes to use in later analyses
+    pcaModes = 50;
+    
+    
+    
+    %%%%%%%% Wavelet Parameters %%%%%%%%
+    
+    %number of wavelet frequencies to use
+    numPeriods = 25;
+    
+    %dimensionless Morlet wavelet parameter
+    omega0 = 5;
+    
+    %sampling frequency (Hz)
+    samplingFreq = 100;
+        
+    %minimum frequency for wavelet transform (Hz)
+    minF = 1;
+    
+    %maximum frequency for wavelet transform (Hz)
+    maxF = 50;
+    
+    
+    
+    
+    
+    
+    %%%%%%%% t-SNE Parameters %%%%%%%%
+    
+    
+    %2^H (H is the transition entropy)
+    perplexity = 32;
+    
+    %relative convergence criterium for t-SNE
+    relTol = 1e-4;
+    
+    %number of dimensions for use in t-SNE
+    num_tsne_dim = 2;
+    
+    %binary search tolerance for finding pointwise transition region
+    sigmaTolerance = 1e-5;
+    
+    %maximum number of non-zero neighbors in P
+    maxNeighbors = 200;
+    
+    %initial momentum
+    momentum = .5;
+    
+    %value to which momentum is changed
+    final_momentum = 0.8;    
+    
+    %iteration at which momentum is changed
+    mom_switch_iter = 250;      
+    
+    %iteration at which lying about P-values is stopped
+    stop_lying_iter = 125;      
+    
+    %degree of P-value expansion at early iterations
+    lie_multiplier = 4;
+    
+    %maximum number of iterations
+    max_iter = 1000;  
+    
+    %initial learning rate
+    epsilon = 500;  
+    
+    %minimum gain for delta-bar-delta
+    min_gain = .01;   
+
+    %readout variable for t-SNE
+    tsne_readout = 1;
+    
+    %embedding batchsize
+    embedding_batchSize = 20000;
+    
+    %maximum number of iterations for the Nelder-Mead algorithm
+    maxOptimIter = 100;
+    
+    %number of points in the training set
+    trainingSetSize = 35000;
+    
+    %local neighborhood definition in training set creation
+    kdNeighbors = 5;
+    
+    %t-SNE training set stopping critereon
+    training_relTol = 2e-3;
+    
+    %t-SNE training set perplexity
+    training_perplexity = 20;
+    
+    %number of points to evaluate in each training set file
+    training_numPoints = 10000;
+    
+    %minimum training set template length
+    minTemplateLength = 1;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
