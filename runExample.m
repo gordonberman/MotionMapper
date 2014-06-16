@@ -3,7 +3,7 @@
 %Place path to example files here
 filePath = '';
 
-%add utilies folder to path
+%add utilities folder to path
 addpath(genpath('./utilities/'));
 
 %find all avi files in 'filePath'
