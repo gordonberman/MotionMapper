@@ -50,6 +50,7 @@ function [yData,betas,P,errors] = tsne_d(D, parameters)
     D = D / max(D(:));                                                      
     [P,betas] = d2p_sparse(D .^ 2, perplexity, sigmaTolerance);                                     
     
+    clear D
     
     % Run t-SNE
     if initial_solution
