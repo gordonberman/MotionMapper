@@ -34,6 +34,10 @@ function [yData,signalData,signalIdx,signalAmps] = ...
     N = length(projections(:,1));
     numModes = parameters.pcaModes;
     skipLength = floor(N / numPoints);
+    if skipLength == 0
+        skipLength = 1;
+        numPoints = N;
+    end
     firstFrame = mod(N,numPoints) + 1;
     signalIdx = firstFrame:skipLength:(firstFrame + (numPoints-1)*skipLength);
     
