@@ -168,7 +168,7 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     for j=1:numProcessors
         
         fprintf(1,'Finding initial orientation for processor #%2i\n',j);
-        open(alignmentFiles{j});
+        %open(alignmentFiles{j});
         
         i = groupings{j}(1);
         %nn = nDigits - 1 - floor(log(i+1e-10)/log(10));
@@ -259,7 +259,7 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
             
         end
         
-        writeVideo(alignmentFiles{j},image);
+        %writeVideo(alignmentFiles{j},image);
         
     end
     
@@ -288,7 +288,8 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
         
         [Xs_temp{i},Ys_temp{i},Angles_temp{i},Areas_temp{i},svdskips_temp{i}] = ...
             align_subroutine_parallel_avi(groupings{i},currentPhis(i),...
-            segmentationOptions,nDigits,file_path,alignmentFiles{i},readout,i,asymThreshold,area1s(i),vidObj,[],areanorm);
+            segmentationOptions,nDigits,file_path,alignmentFiles{i},readout,i,...
+            asymThreshold,area1s(i),vidObj,[],areanorm,initialImage);
         
         
         

@@ -1,6 +1,6 @@
 function [Xs,Ys,angles,areas,svdskips] = ...
     align_subroutine_parallel_avi(grouping,initialPhi,segmentationOptions,nDigits,file_path,...
-    image_path,readout,processorNum,asymThreshold,initialArea,vidObj,fid,areanorm)
+    image_path,readout,processorNum,asymThreshold,initialArea,vidObj,fid,areanorm,initialImage)
 %align_subroutine_parallel_avi is a subroutine used within
 %alignImages_Radon_parallel_avi in order to parallelize properly
 %
@@ -18,6 +18,9 @@ angles = zeros(L,1);
 areas = zeros(L,1);
 svdskips = zeros(L,1);
 vidChunk = read(vidObj,[grouping(1) grouping(end)]);
+
+open(image_path);
+writeVideo(image_path,initialImage);
 
 
 dilateSize = segmentationOptions.dilateSize;
