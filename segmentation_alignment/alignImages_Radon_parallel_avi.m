@@ -151,7 +151,6 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
         qq = num2str(i);
         qq = [repmat('0',1,fDigits - length(qq)) qq];
         alignmentFiles{i} = VideoWriter([image_path '/' qq '.avi']);
-        open(alignmentFiles{i});
     end
     
     x1s = zeros(numProcessors,1);
@@ -169,7 +168,7 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     for j=1:numProcessors
         
         fprintf(1,'Finding initial orientation for processor #%2i\n',j);
-        
+        open(alignmentFiles{j});
         
         i = groupings{j}(1);
         %nn = nDigits - 1 - floor(log(i+1e-10)/log(10));
