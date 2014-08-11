@@ -183,7 +183,7 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
         
         if ~segmentationOff
             imageOut = segmentImage_combo(originalImage,dilateSize,cannyParameter,...
-                imageThreshold,[],[],minArea,true);a
+                imageThreshold,[],[],minArea,true);
             imageOut = rescaleImage(imageOut,areanorm);
         else
             imageOut = originalImage;
