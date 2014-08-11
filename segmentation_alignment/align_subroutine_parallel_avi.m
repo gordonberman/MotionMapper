@@ -41,7 +41,7 @@ currentMinArea = ceil(initialArea*(1-maxAreaDifference));
 for j=2:L
     
     if mod(j,readout) == 0
-        fprintf(1,'\t Processor #%2i, Image #%7i\n',processorNum,j);
+        fprintf(1,'\t Processor #%2i, Image #%7i of %7i\n',processorNum,j,L);
     end
     
     
