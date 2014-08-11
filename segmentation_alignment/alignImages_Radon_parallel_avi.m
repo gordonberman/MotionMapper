@@ -177,10 +177,13 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
         %q = [zzs num2str(i) '.tiff'];
         
         originalImage = read(vidObj,i);
+        if length(size(originalImage)) == 3
+            originalImage = originalImage(:,:,1);
+        end
         
         if ~segmentationOff
             imageOut = segmentImage_combo(originalImage,dilateSize,cannyParameter,...
-                imageThreshold,[],[],minArea,true);
+                imageThreshold,[],[],minArea,true);a
             imageOut = rescaleImage(imageOut,areanorm);
         else
             imageOut = originalImage;
