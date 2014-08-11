@@ -144,6 +144,16 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     end
     
     
+    %initialize new avi files
+    alignmentFiles = cell(numProcessors,1);
+    fDigits = ceil(log10(numProcessors+1e-10));
+    for i=1:numProcessors
+        qq = num2str(i);
+        qq = [repmat('0',1,fDigits - length(qq)) qq];
+        alignmentFiles{i} = VideoWriter([image_path '/' qq '.avi']);
+        open(alignmentFiles{i});
+    end
+    
     x1s = zeros(numProcessors,1);
     y1s = zeros(numProcessors,1);
     angle1s = zeros(numProcessors,1);
@@ -162,9 +172,9 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
         
         
         i = groupings{j}(1);
-        nn = nDigits - 1 - floor(log(i+1e-10)/log(10));
-        zzs  = repmat('0',1,nn);
-        q = [zzs num2str(i) '.tiff'];
+        %nn = nDigits - 1 - floor(log(i+1e-10)/log(10));
+        %zzs  = repmat('0',1,nn);
+        %q = [zzs num2str(i) '.tiff'];
         
         originalImage = read(vidObj,i);
         
@@ -232,16 +242,23 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
             
             area1s(j) = sum(imageOut(:) ~= 0);
             currentPhis(j) = angle1s(j);
-            imwrite(image,[image_path zzs num2str(i) '.tiff'],'tiff');
+            %imwrite(image,[image_path zzs num2str(i) '.tiff'],'tiff');
             images{j} = image;
             svdskip1s(j) = 0;
             
         else
+            
             area1s(j) = sum(imageOut(:) ~= 0);
             currentPhis(j) = initialPhi;
             angle1s(j) = initialPhi;
             svdskip1s(j) = 1;
+            image = uint8(zeros(size(imageOut2)));
+            images{j} = image;
+            
         end
+        
+        writeVideo(alignmentFiles{j},image);
+        
     end
     
     
@@ -257,14 +274,21 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     
     parfor i=1:numProcessors
 
-        k = groupings{i}(1);
-        nn = nDigits - 1 - floor(log(k+1e-10)/log(10));
-        zzs  = repmat('0',1,nn);
+        %k = groupings{i}(1);
+        %nn = nDigits - 1 - floor(log(k+1e-10)/log(10));
+        %zzs  = repmat('0',1,nn);
 
+        
+        %         [Xs_temp{i},Ys_temp{i},Angles_temp{i},Areas_temp{i},svdskips_temp{i}] = ...
+        %             align_subroutine_parallel_avi(groupings{i},currentPhis(i),...
+        %             segmentationOptions,nDigits,file_path,image_path,readout,i,asymThreshold,area1s(i),vidObj,[],areanorm);
+        
         
         [Xs_temp{i},Ys_temp{i},Angles_temp{i},Areas_temp{i},svdskips_temp{i}] = ...
             align_subroutine_parallel_avi(groupings{i},currentPhis(i),...
-            segmentationOptions,nDigits,file_path,image_path,readout,i,asymThreshold,area1s(i),vidObj,[],areanorm);
+            segmentationOptions,nDigits,file_path,alignmentFiles{i},readout,i,asymThreshold,area1s(i),vidObj,[],areanorm);
+        
+        
         
         Xs_temp{i}(1) = x1s(i);
         Ys_temp{i}(1) = y1s(i);
@@ -272,7 +296,8 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
         Angles_temp{i}(1) = angle1s(i);
         svdskips_temp{i}(1) = svdskip1s(i);
         
-                
+        close(alignmentFiles{i});   
+        
     end
     
     

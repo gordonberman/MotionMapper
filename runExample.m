@@ -12,8 +12,7 @@ L = length(imageFiles);
 numZeros = ceil(log10(L+1e-10));
 
 %define any desired parameter changes here
-parameters.trainingSetSize = 5000;
-parameters.training_numPoints = 1000;
+parameters.samplingFreq = 100;
 
 %initialize parameters
 parameters = setRunParameters(parameters);

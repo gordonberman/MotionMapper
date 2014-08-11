@@ -122,12 +122,15 @@ for j=2:L
         
         initialPhi = angles(j);
         svdskips(j) = 0;
-        imwrite(loopImage,[image_path zzs num2str(k) '.tiff'],'tiff');
-
+        %imwrite(loopImage,[image_path zzs num2str(k) '.tiff'],'tiff');
+        writeVideo(image_path,loopImage);
+        
     else
         
         angles(j) = angles(j-1);
         svdskips(j) = 1;
+        loopImage = uint8(zeros(size(imageOut2)));
+        writeVideo(image_path,loopImage);
         
     end
     
