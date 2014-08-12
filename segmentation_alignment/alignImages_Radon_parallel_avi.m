@@ -168,12 +168,8 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     for j=1:numProcessors
         
         fprintf(1,'Finding initial orientation for processor #%2i\n',j);
-        %open(alignmentFiles{j});
         
         i = groupings{j}(1);
-        %nn = nDigits - 1 - floor(log(i+1e-10)/log(10));
-        %zzs  = repmat('0',1,nn);
-        %q = [zzs num2str(i) '.tiff'];
         
         originalImage = read(vidObj,i);
         if length(size(originalImage)) == 3
@@ -244,7 +240,6 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
             
             area1s(j) = sum(imageOut(:) ~= 0);
             currentPhis(j) = angle1s(j);
-            %imwrite(image,[image_path zzs num2str(i) '.tiff'],'tiff');
             images{j} = image;
             svdskip1s(j) = 0;
             
@@ -258,8 +253,6 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
             images{j} = image;
             
         end
-        
-        %writeVideo(alignmentFiles{j},image);
         
     end
     
@@ -275,16 +268,6 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     
     
     parfor i=1:numProcessors
-
-        %k = groupings{i}(1);
-        %nn = nDigits - 1 - floor(log(k+1e-10)/log(10));
-        %zzs  = repmat('0',1,nn);
-
-        
-        %         [Xs_temp{i},Ys_temp{i},Angles_temp{i},Areas_temp{i},svdskips_temp{i}] = ...
-        %             align_subroutine_parallel_avi(groupings{i},currentPhis(i),...
-        %             segmentationOptions,nDigits,file_path,image_path,readout,i,asymThreshold,area1s(i),vidObj,[],areanorm);
-        
         
         [Xs_temp{i},Ys_temp{i},Angles_temp{i},Areas_temp{i},svdskips_temp{i}] = ...
             align_subroutine_parallel_avi(groupings{i},currentPhis(i),...
