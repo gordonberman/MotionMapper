@@ -47,7 +47,6 @@ function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,
     for i=1:L
         groupings{i} = idx(idx > cumsumLengths(i) & idx <= cumsumLengths(i+1));
     end
-
     
     testImage = read(vidObjs{1},1);
     testImage = testImage(:,:,1);
@@ -68,12 +67,12 @@ function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,
         
         M = length(groupings{i});
         currentImages = zeros(sR(1),sR(2),M);
-        currentIdx = groupings{i};
+        currentIdx = groupings{i} - cumsumLengths(i);
         q = vidObjs{i};
         
         parfor j=1:M
             
-            image = imread(q,currentIdx(j));
+            image = read(q,currentIdx(j));
             image = image(:,:,1);
             a = double(imresize(image,s));
             lowVal = min(a(a>0));
