@@ -86,6 +86,10 @@ function parameters = setRunParameters(parameters)
     pcaModes = 50;
     
     
+    %number of images to process per file in eignemode calculations
+    %a value of -1 instructs all images to be processed
+    pcaNumPerFile = -1;
+    
     
     %%%%%%%% Wavelet Parameters %%%%%%%%
     
@@ -463,7 +467,12 @@ function parameters = setRunParameters(parameters)
         parameters.minTemplateLength = minTemplateLength;
     end
     
-
+    
+    if ~isfield(parameters,'pcaNumPerFile') || isempty(parameters.pcaNumPerFile)
+        parameters.pcaNumPerFile = pcaNumPerFile;
+    end
+    
+    
     
     
    

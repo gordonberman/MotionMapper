@@ -1,4 +1,4 @@
-function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,numToTest,thetas,scale)
+function [meanRadon,stdRadon,vidObjs] = findImageSubsetStatistics(alignedImageDirectory,numToTest,thetas,scale)
 %findImageSubsetStatistics finds the Radon-transform space mean and
 %standard deviations for all of the files in a directory
 %
@@ -13,6 +13,7 @@ function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,
 %
 %       meanRadon -> mean values of pixels in Radon-transform space
 %       stdRadon -> standard deviations of pixels in Radon-transform space
+%       vidObjs -> VideoReader objects for each of the aligned avi files
 %
 % (C) Gordon J. Berman, 2014
 %     Princeton University

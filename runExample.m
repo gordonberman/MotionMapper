@@ -57,14 +57,14 @@ end
 %find image subset statistics (a gui will pop-up here)
 fprintf(1,'Finding Subset Statistics\n');
 numToTest = parameters.pca_batchSize;
-[pixels,thetas,means,stDevs] = findRadonPixels(alignmentDirectory,numToTest,parameters);
+[pixels,thetas,means,stDevs,vidObjs] = findRadonPixels(alignmentDirectory,numToTest,parameters);
 
 
 %% 
 
 %find postural eigenmodes (not performing shuffled analysis for now)
 fprintf(1,'Finding Postural Eigenmodes\n');
-[vecs,vals,meanValues] = findPosturalEigenmodes(alignmentDirectory,pixels,parameters);
+[vecs,vals,meanValues] = findPosturalEigenmodes(vidObjs,pixels,parameters);
 
 vecs = vecs(:,1:parameters.numProjections);
 

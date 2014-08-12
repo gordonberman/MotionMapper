@@ -1,4 +1,4 @@
-function [pixels,thetas,means,stDevs] = findRadonPixels(filePath,numToTest,parameters)
+function [pixels,thetas,means,stDevs,vidObjs] = findRadonPixels(filePath,numToTest,parameters)
 %findRadonPixels finds a set of pixels that contain much of the observed
 %variance in the images given a set of aligned .tiff files.  A gui will
 %pop-up asking the user to select a cut-off point.  The left-most minimum
@@ -11,13 +11,14 @@ function [pixels,thetas,means,stDevs] = findRadonPixels(filePath,numToTest,param
 %       parameters -> struct containing non-default choices for parameters
 %
 %
-%   Output variable2:
+%   Output variables:
 %
 %       pixels -> list of the chosen high-variance pixels
 %       thetas -> list of the thetas used in the Radon transform
 %       means -> double array containing the mean radon-transform values
 %       stDevs -> double array containing the standard deviation of the
 %                   radon-transform values
+%       vidObjs -> VideoReader objects for each of the aligned avi files
 %
 % (C) Gordon J. Berman, 2014
 %     Princeton University
@@ -45,7 +46,7 @@ function [pixels,thetas,means,stDevs] = findRadonPixels(filePath,numToTest,param
     
     
     
-    [means,stDevs] = findImageSubsetStatistics(filePath,numToTest,thetas,scale);
+    [means,stDevs,vidObjs] = findImageSubsetStatistics(filePath,numToTest,thetas,scale);
     
     
     [Y,X] = hist(stDevs(:),100);
