@@ -86,7 +86,7 @@ function [mu,vecs,vals] = onlineImagePCA_radon(files,batchSize,scale,pixels,thet
         X = zeros(currentBatchSize,L);
         for j=1:num
             
-            fprintf(1,'Batch #%5i out of %5i\n',j,num);
+            fprintf(1,'\t Batch #%5i out of %5i\n',j,num);
             
             if firstBatch
                 
