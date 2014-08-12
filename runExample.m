@@ -13,6 +13,7 @@ numZeros = ceil(log10(L+1e-10));
 
 %define any desired parameter changes here
 parameters.samplingFreq = 100;
+parameters.trainingSetSize = 5000;
 
 %initialize parameters
 parameters = setRunParameters(parameters);
