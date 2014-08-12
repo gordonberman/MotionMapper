@@ -140,11 +140,9 @@ function [mu,vecs,vals] = onlineImagePCA_radon(files,batchSize,scale,pixels,thet
                 currentImage = currentImage + maxJ;
                 
             end
-            
-            clear X tempMu
-            
+                        
         end
-        
+                
         totalImages = totalImages + currentImage;
         
         

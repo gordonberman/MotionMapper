@@ -68,12 +68,13 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
         fprintf(1,'Processing File #%5i out of %5i\n',t,Nf);
         
         M = lengths(t);
-        currentIdx = 1:M;
-        if batchSize < M
+        
+        if batchSize > M
             currentBatchSize = M;
         else
             currentBatchSize = batchSize;
         end
+        
         num = ceil(M/currentBatchSize);
         currentImage = 0;
         
@@ -86,13 +87,13 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
             
             tempData(:) = 0;
             if i == num
-                maxJ = N - currentImage;
+                maxJ = M - currentImage;
                 tempData = tempData(1:maxJ,:);
             else
                 maxJ = currentBatchSize;
             end
             
-            iterationIdx = currentIdx((1:maxJ) + currentImage);
+            iterationIdx = currentImage + (1:maxJ);
             
             
             parfor j=1:maxJ
