@@ -64,6 +64,10 @@ function [pixels,thetas,means,stDevs,vidObjs] = findRadonPixels(filePath,numToTe
         title(['# of Pixels = ' num2str(length(pixels)) '.  Is this OK? [y/n]'],'fontsize',16,'fontweight','bold');
         
         [~,~,button] = ginput(1);
+        while isempty(button)
+            [~,~,button] = ginput(1);
+        end
+        
         while button ~= 121 && button ~= 110 && button ~= 89 && button ~= 78
             [~,~,button] = ginput(1);
         end
