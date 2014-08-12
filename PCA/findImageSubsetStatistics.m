@@ -18,6 +18,7 @@ function [meanRadon,stdRadon,vidObjs] = findImageSubsetStatistics(alignedImageDi
 % (C) Gordon J. Berman, 2014
 %     Princeton University
 
+
     files = findAllImagesInFolders(alignedImageDirectory,'avi');
     L = length(files);
     
@@ -86,13 +87,13 @@ function [meanRadon,stdRadon,vidObjs] = findImageSubsetStatistics(alignedImageDi
         
         radonImages(:,:,(cumsumLengths(i)+1):cumsumLengths(i+1)) = currentImages;
         
-        clear currentImages currentIdx M 
+        clear currentImages currentIdx M
         
     end
     
     
     
-    
+    fprintf(1,'Calculating Mean and Standard Deviation\n');
     meanRadon = zeros(sR);
     stdRadon = zeros(sR);
     for i=1:sR(1)

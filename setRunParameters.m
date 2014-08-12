@@ -85,7 +85,6 @@ function parameters = setRunParameters(parameters)
     %number of PCA modes to use in later analyses
     pcaModes = 50;
     
-    
     %number of images to process per file in eignemode calculations
     %a value of -1 instructs all images to be processed
     pcaNumPerFile = -1;
