@@ -63,6 +63,7 @@ function [meanRadon,stdRadon,vidObjs] = findImageSubsetStatistics(alignedImageDi
     
     radonImages = zeros(sR(1),sR(2),numToTest);
     fprintf(1,'Calculating Image Radon Transforms\n');
+    count = 0;
     for i=1:L
         
         fprintf(1,'\t Computing Transforms for File #%7i out of %7i\n',i,L);
@@ -85,7 +86,8 @@ function [meanRadon,stdRadon,vidObjs] = findImageSubsetStatistics(alignedImageDi
             
         end
         
-        radonImages(:,:,(cumsumLengths(i)+1):cumsumLengths(i+1)) = currentImages;
+        radonImages(:,:,count + (1:M)) = currentImages;
+        count = count + M;
         
         clear currentImages currentIdx M
         
