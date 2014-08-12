@@ -5,7 +5,7 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
 %
 %   Input variables:
 %
-%       filePath -> directory containing aligned .tiff files
+%       filePath -> cell array of VideoReader objects
 %       coeffs -> postural eignmodes (L x (M<L) array)
 %       meanValues -> mean value for each of the pixels
 %       pixels -> radon-transform space pixels to use (Lx1 or 1xL array)
@@ -24,12 +24,22 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
 %     Princeton University
 
 
-    N = length(files);
-    if N < batchSize
-        batchSize = N;
+    %     N = length(files);
+    %     if N < batchSize
+    %         batchSize = N;
+    %     end
+    %     files = files(randperm(N));
+    %     num = ceil(N/batchSize);
+    
+    
+    Nf = length(files);
+    lengths = zeros(Nf,1);
+    for i=1:Nf
+        lengths(i) = files{i}.NumberOfFrames;
     end
-    files = files(randperm(N));
-    num = ceil(N/batchSize);
+    N = sum(lengths);
+    cumsumLengths = [0;cumsum(lengths)];
+    
     L = length(pixels);
     
     if nargin < 6 || isempty(numProjections)
@@ -37,7 +47,9 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
     end
     coeffs = coeffs(:,1:numProjections);
     
-    testImage = imread(files{1});
+    
+    testImage = read(files{1},1);
+    testImage = testImage(:,:,1);
     s = size(testImage);
     nX = round(s(1)/scale);
     nY = round(s(2)/scale);
@@ -50,33 +62,61 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
     
     
     projections = zeros(N,numProjections);
-    tempData = zeros(batchSize,L);
-    currentImage = 0;
-    for i=1:num
-        fprintf(1,'Processing Batch #%5i of %5i\n',i,num);
-        
-        tempData(:) = 0;
-        if i == num
-            maxJ = N - currentImage;
-            tempData = tempData(1:maxJ,:);
-        else
-            maxJ = batchSize;
-        end
+    totalImages = 0;
+    for t=1:Nf
     
+        fprintf(1,'Processing File #%5i out of %5i\n',t,Nf);
         
-        parfor j=1:maxJ
-            a = double(imresize(imread(files{currentImage+j}),s));
-            lowVal = min(a(a>0));
-            highVal = max(a(a>0));
-            a = (a - lowVal) / (highVal - lowVal);
+        M = lengths(t);
+        currentIdx = 1:M;
+        if batchSize < M
+            currentBatchSize = M;
+        else
+            currentBatchSize = batchSize;
+        end
+        num = ceil(M/currentBatchSize);
+        currentImage = 0;
+        
+        currentVideoReader = files{t};
+        
+        tempData = zeros(currentBatchSize,L);
+        for i=1:num
             
-            R = radon(a,thetas);
-            tempData(j,:) = R(pixels) - meanValues;
+            fprintf(1,'\t Batch #%5i of %5i\n',i,num);
+            
+            tempData(:) = 0;
+            if i == num
+                maxJ = N - currentImage;
+                tempData = tempData(1:maxJ,:);
+            else
+                maxJ = currentBatchSize;
+            end
+            
+            iterationIdx = currentIdx((1:maxJ) + currentImage);
+            
+            
+            parfor j=1:maxJ
+                
+                a = read(currentVideoReader,iterationIdx(j));
+                a = double(imresize(a(:,:,1),s));
+                lowVal = min(a(a>0));
+                highVal = max(a(a>0));
+                a = (a - lowVal) / (highVal - lowVal);
+                
+                R = radon(a,thetas);
+                tempData(j,:) = R(pixels) - meanValues;
+                
+            end
+            
+            projections(totalImages + (1:maxJ),:) = tempData*coeffs;
+            totalImages = totalImages + maxJ;
+            currentImage = currentImage + maxJ;
+            
         end
         
-        projections((1:maxJ) + batchSize*(i-1),:) = tempData*coeffs;
-        currentImage = currentImage +  maxJ;
+        
     end
+    
     
     
     
