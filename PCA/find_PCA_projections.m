@@ -24,13 +24,6 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
 %     Princeton University
 
 
-    %     N = length(files);
-    %     if N < batchSize
-    %         batchSize = N;
-    %     end
-    %     files = files(randperm(N));
-    %     num = ceil(N/batchSize);
-    
     
     Nf = length(files);
     lengths = zeros(Nf,1);
@@ -38,7 +31,6 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
         lengths(i) = files{i}.NumberOfFrames;
     end
     N = sum(lengths);
-    cumsumLengths = [0;cumsum(lengths)];
     
     L = length(pixels);
     

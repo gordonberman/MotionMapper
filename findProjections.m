@@ -57,16 +57,6 @@ function projections = findProjections(filePath,vecs,meanValues,pixels,parameter
     end
     
     
-    %     if nargin < 6 || isempty(firstFrame)
-    %         firstFrame = 1;
-    %     end
-    %
-    %     if nargin < 7 || isempty(lastFrame)
-    %         lastFrame = N;
-    %     end
-    
-    %files = files(firstFrame:lastFrame);
-    
     
     numThetas = parameters.num_Radon_Thetas;
     spacing = 180/numThetas;
