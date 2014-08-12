@@ -49,7 +49,7 @@ function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,
     end
 
     
-    testImage = read(files{1},1);
+    testImage = read(vidObjs{1},1);
     testImage = testImage(:,:,1);
     
     s = size(testImage);
