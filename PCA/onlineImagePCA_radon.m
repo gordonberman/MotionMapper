@@ -42,7 +42,8 @@ function [mu,vecs,vals] = onlineImagePCA_radon(files,batchSize,scale,pixels,thet
     
     L = length(pixels);
     
-    testImage = imread(files{1},1);
+    %testImage = imread(files{1},1);
+    testImage = read(files{1},1);
     testImage = testImage(:,:,1);
     s = size(testImage);
     nX = round(s(1)/scale);
