@@ -4,7 +4,7 @@ function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,
 %
 %   Input variables:
 %
-%       alignedImageDirectory -> directory containing aligned .tiff files
+%       alignedImageDirectory -> directory containing aligned .avi files
 %       numToTest -> number of images from which to calculate values
 %       thetas -> angles used in Radon transform
 %       scale -> image scaling factor%
@@ -17,24 +17,41 @@ function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,
 % (C) Gordon J. Berman, 2014
 %     Princeton University
 
-
-    readout = 500;
-
-    files = findAllImagesInFolders(alignedImageDirectory,'tiff');
-    N = length(files);
+    files = findAllImagesInFolders(alignedImageDirectory,'avi');
+    L = length(files);
+    
+    lengths = zeros(L,1);
+    vidObjs = cell(L,1);
+    parfor i=1:L
+        vidObjs{i} = VideoReader(files{i});
+        lengths(i) = vidObjs{i}.NumberOfFrames;
+    end
+    
+    N = sum(lengths);
+    cumsumLengths = [0;cumsum(lengths)];
+    
+    
     if nargin < 2 || isempty(numToTest)
         numToTest = N;
-    end 
+    end
     
     if numToTest > N
         idx = 1:N;
         numToTest = N;
     else
-        idx = randperm(N,numToTest);
+        idx = sort(randperm(N,numToTest));
     end
-    filesToTest = files(idx);
+
     
-    testImage = imread(filesToTest{1});
+    groupings = cell(L,1);
+    for i=1:L
+        groupings{i} = idx(idx > cumsumLengths(i) & idx <= cumsumLengths(i+1));
+    end
+
+    
+    testImage = read(files{1},1);
+    testImage = testImage(:,:,1);
+    
     s = size(testImage);
     nX = round(s(1)/scale);
     nY = round(s(2)/scale);
@@ -45,19 +62,31 @@ function [meanRadon,stdRadon] = findImageSubsetStatistics(alignedImageDirectory,
     
     radonImages = zeros(sR(1),sR(2),numToTest);
     fprintf(1,'Calculating Image Radon Transforms\n');
-    parfor i=1:numToTest
+    for i=1:L
         
-        if mod(i,readout) == 0
-            fprintf(1,'\t Image #%7i out of %7i\n',i,numToTest);
+        fprintf(1,'\t Computing Transforms for File #%7i out of %7i\n',i,L);
+        
+        M = length(groupings{i});
+        currentImages = zeros(sR(1),sR(2),M);
+        currentIdx = groupings{i};
+        q = vidObjs{i};
+        
+        parfor j=1:M
+            
+            image = imread(q,currentIdx(j));
+            image = image(:,:,1);
+            a = double(imresize(image,s));
+            lowVal = min(a(a>0));
+            highVal = max(a(a>0));
+            a = (a - lowVal) / (highVal - lowVal);
+            
+            currentImages(:,:,j) = radon(a,thetas);
+            
         end
         
-        image = imread(filesToTest{i});
-        a = imresize(image,s);
-        lowVal = min(a(a>0));
-        highVal = max(a(a>0));
-        a = (a - lowVal) / (highVal - lowVal);
+        radonImages(:,:,(cumsumLengths(i)+1):cumsumLengths(i+1)) = currentImages;
         
-        radonImages(:,:,i) = radon(a,thetas);
+        clear currentImages currentIdx M 
         
     end
     

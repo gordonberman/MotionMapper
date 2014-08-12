@@ -49,7 +49,7 @@ function [mu,vecs,vals,vecsS,valsS] = onlineImagePCA_radon(files,batchSize,scale
     fprintf(1,'Processing Initial Batch...\n');
     X = zeros(batchSize,L);
     parfor i=1:batchSize
-        a = imresize(imread(files{i}),s);
+        a = double(imresize(imread(files{i}),s));
         lowVal = min(a(a>0));
         highVal = max(a(a>0));
         a = (a - lowVal) / (highVal - lowVal);
@@ -77,7 +77,7 @@ function [mu,vecs,vals,vecsS,valsS] = onlineImagePCA_radon(files,batchSize,scale
     
         tempMu(:) = 0;
         parfor j=1:maxJ
-            a = imresize(imread(files{currentImage+j}),s);
+            a = double(imresize(imread(files{currentImage+j}),s));
             lowVal = min(a(a>0));
             highVal = max(a(a>0));
             a = (a - lowVal) / (highVal - lowVal);

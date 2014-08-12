@@ -65,7 +65,7 @@ function projections = find_PCA_projections(files,coeffs,meanValues,...
     
         
         parfor j=1:maxJ
-            a = imresize(imread(files{currentImage+j}),s);
+            a = double(imresize(imread(files{currentImage+j}),s));
             lowVal = min(a(a>0));
             highVal = max(a(a>0));
             a = (a - lowVal) / (highVal - lowVal);
