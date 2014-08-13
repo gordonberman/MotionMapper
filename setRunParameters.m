@@ -65,6 +65,8 @@ function parameters = setRunParameters(parameters)
     %threshold for seperating body from background
     bodyThreshold = 150;
 
+    %number of images to test for image size estimation
+    areaNormalizationNumber = 200;
     
     
     
@@ -469,6 +471,11 @@ function parameters = setRunParameters(parameters)
     
     if ~isfield(parameters,'pcaNumPerFile') || isempty(parameters.pcaNumPerFile)
         parameters.pcaNumPerFile = pcaNumPerFile;
+    end
+    
+    
+    if ~isfield(parameters,'areaNormalizationNumber') || isempty(parameters.areaNormalizationNumber)
+        parameters.areaNormalizationNumber = areaNormalizationNumber;
     end
     
     

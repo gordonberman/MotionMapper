@@ -53,11 +53,11 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     vidObj = VideoReader(file_path);
     nFrames = vidObj.NumberOfFrames;
     
-    if isempty(startImage) == 1
+    if isempty(startImage)
         startImage = 1000;
     end
     
-    if isempty(finalImage) == 1
+    if isempty(finalImage)
         if nFrames < 361000
             finalImage = nFrames;
         else
@@ -80,21 +80,19 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     
     %Area normalization
     
-    idx = randi([startImage,nFrames],[100,1]);
+    idx = randi([startImage,nFrames],[parameters.areaNormalizationNumber,1]);
     basisSize = sum(basisImage(:)>0);
-    imageSize = 0;
-    for j = 1:100
+    imageSizes = zeros(size(idx));
+    for j = 1:parameters.areaNormalizationNumber
         originalImage = read(vidObj,idx(j));
-        imageSize = imageSize+sum(imcomplement(originalImage(:))>bodyThreshold);
+        imageSizes(i) = sum(imcomplement(originalImage(:))>bodyThreshold);
     end
-    imageSize = imageSize/100;
+    imageSize = median(imageSizes);
     areanorm = sqrt(basisSize/imageSize);
     
         
-    if isempty(image_path) == 1
-        image_path_init = '/Users/gberman/Desktop/';
-        image_path   = input('End of Image Path?:  ', 's');
-        image_path = [image_path_init image_path];
+    if isempty(image_path)
+        image_path   = input('Image Path = ?:  ', 's');
     end
     
     [status,~]=unix(['ls ' image_path]);
