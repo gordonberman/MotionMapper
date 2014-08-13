@@ -85,7 +85,7 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     imageSizes = zeros(size(idx));
     for j = 1:parameters.areaNormalizationNumber
         originalImage = read(vidObj,idx(j));
-        imageSizes(i) = sum(imcomplement(originalImage(:))>bodyThreshold);
+        imageSizes(j) = sum(imcomplement(originalImage(:))>bodyThreshold);
     end
     imageSize = median(imageSizes);
     areanorm = sqrt(basisSize/imageSize);

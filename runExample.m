@@ -1,6 +1,6 @@
 %%example script that will run the code for a set of images found in ??
 
-%Place path to example files here
+%Place path to folder containing example .avi files here
 filePath = '';
 
 %add utilities folder to path
