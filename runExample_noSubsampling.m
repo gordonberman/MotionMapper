@@ -10,7 +10,7 @@ addpath(genpath('./utilities/'));
 %set file path
 [filePath,fileName,~] = fileparts(moviePath);
 filePath = [filePath '/' fileName '/'];
-imageFiles = {filePath};
+imageFiles = {moviePath};
 L = length(imageFiles);
 numZeros = ceil(log10(L+1e-10));
 
@@ -43,12 +43,9 @@ fprintf(1,'Aligning Files\n');
 alignmentFolders = cell(L,1);
 i=1;
 
-fprintf(1,'\t Aligning File #%4i out of %4i\n',i,L);
-
 fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
 tempDirectory = [alignmentDirectory 'alignment_' fileNum '/'];
 alignmentFolders{i} = tempDirectory;
-
 outputStruct = runAlignment(imageFiles{i},tempDirectory,firstFrame,lastFrame,parameters);
 
 save([tempDirectory 'outputStruct.mat'],'outputStruct');
@@ -102,12 +99,13 @@ fprintf(1,'Calculating Wavelet Transform\n');
 [data,f] = findWavelets(projections,parameters.pcaModes,parameters);   
 
 amps = sum(data,2);
-data(:) = bsxfun(data,amps);
+data(:) = bsxfun(@rdivide,data,amps);
 
 skipLength = round(length(data(:,1))/parameters.trainingSetSize);
 
 trainingSetData = data(skipLength:skipLength:end,:);
 trainingAmps = amps(skipLength:skipLength:end);
+parameters.signalLabels = log10(trainingAmps);
 
 
 fprintf(1,'Finding t-SNE Embedding for Training Set\n');
