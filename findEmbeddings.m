@@ -42,14 +42,28 @@ function [zValues,outputStatistics] = ...
     
     
     d = length(trainingData(1,:));
-    numModes = d / parameters.numPeriods;
+    numModes = parameters.pcaModes;
+    numPeriods = parameters.numPeriods;
     
-    fprintf(1,'Finding Wavelets\n');
-    [data,f] = findWavelets(projections,numModes,parameters);
-    data = bsxfun(@rdivide,data,sum(data,2));
+    if d == numModes*numPeriods
+        
+        data = projections;
+        data(:) = bsxfun(@rdivide,data,sum(data,2));
+        
+        minT = 1 ./ parameters.maxF;
+        maxT = 1 ./ parameters.minF;
+        Ts = minT.*2.^((0:numPeriods-1).*log(maxT/minT)/(log(2)*(numPeriods-1)));
+        f = fliplr(1./Ts);
+        
+    else
+        
+        fprintf(1,'Finding Wavelets\n');
+        [data,f] = findWavelets(projections,numModes,parameters);
+        data(:) = bsxfun(@rdivide,data,sum(data,2));
+        
+    end
     
-    
-    fprintf(1,'Finding Embeddings\n');   
+    fprintf(1,'Finding Embeddings\n');
     [zValues,zCosts,zGuesses,inConvHull,meanMax,exitFlags] = ...
         findTDistributedProjections_fmin(data,trainingData,...
                                     trainingEmbedding,parameters);

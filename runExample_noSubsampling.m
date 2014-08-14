@@ -1,16 +1,23 @@
-%%example script that will run the code for a set of .avi files that are
-%%found in filePath
+%%example script that will run the code for a single .avi file (moviePath)
+%%This version does not perform subsampling to find a training set
 
 %Place path to folder containing example .avi files here
-filePath = '';
+moviePath = '';
 
 %add utilities folder to path
 addpath(genpath('./utilities/'));
 
-%find all avi files in 'filePath'
-imageFiles = findAllImagesInFolders(filePath,'.avi');
+%set file path
+[filePath,fileName,~] = fileparts(moviePath);
+filePath = [filePath '/' fileName '/'];
+imageFiles = {filePath};
 L = length(imageFiles);
 numZeros = ceil(log10(L+1e-10));
+
+[status,~]=unix(['ls ' filePath]);
+if status ~= 0
+    unix(['mkdir ' filePath]);
+end
 
 %define any desired parameter changes here
 parameters.samplingFreq = 100;
@@ -34,23 +41,20 @@ end
 %run alignment for all files in the directory
 fprintf(1,'Aligning Files\n');
 alignmentFolders = cell(L,1);
-for i=1:L    
+i=1;
+
+fprintf(1,'\t Aligning File #%4i out of %4i\n',i,L);
+
+fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
+tempDirectory = [alignmentDirectory 'alignment_' fileNum '/'];
+alignmentFolders{i} = tempDirectory;
+
+outputStruct = runAlignment(imageFiles{i},tempDirectory,firstFrame,lastFrame,parameters);
+
+save([tempDirectory 'outputStruct.mat'],'outputStruct');
+
     
-    fprintf(1,'\t Aligning File #%4i out of %4i\n',i,L);
-    
-    fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
-    tempDirectory = [alignmentDirectory 'alignment_' fileNum '/'];
-    alignmentFolders{i} = tempDirectory;
-    
-    outputStruct = runAlignment(imageFiles{i},tempDirectory,firstFrame,lastFrame,parameters);
-    
-    save([tempDirectory 'outputStruct.mat'],'outputStruct');
-    
-    clear outputStruct
-    clear fileNum
-    clear tempDirectory
-    
-end
+
 
 
 %% Find image subset statistics (a gui will pop-up here)
@@ -75,7 +79,7 @@ title('First 25 Postural Eigenmodes','fontsize',14,'fontweight','bold');
 drawnow;
 
 
-%% Find projections for each data set
+%% Find projections
 
 projectionsDirectory = [filePath './projections/'];
 if ~exist(projectionsDirectory,'dir')
@@ -83,56 +87,44 @@ if ~exist(projectionsDirectory,'dir')
 end
 
 fprintf(1,'Finding Projections\n');
-for i=1:L
+i=1;
+projections = findProjections(alignmentFolders{i},vecs,meanValues,pixels,parameters);
+
+fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
+fileName = imageFiles{i};
+
+save([projectionsDirectory 'projections_' fileNum '.mat'],'projections','fileName');
+
     
-    fprintf(1,'\t Finding Projections for File #%4i out of %4i\n',i,L);
-    projections = findProjections(alignmentFolders{i},vecs,meanValues,pixels,parameters);
-    
-    fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
-    fileName = imageFiles{i};
-    
-    save([projectionsDirectory 'projections_' fileNum '.mat'],'projections','fileName');
-    
-    clear projections
-    clear fileNum
-    clear fileName 
-    
-end
+%% Embed training set
+
+fprintf(1,'Calculating Wavelet Transform\n');
+[data,f] = findWavelets(projections,parameters.pcaModes,parameters);   
+
+amps = sum(data,2);
+data(:) = bsxfun(data,amps);
+
+skipLength = round(length(data(:,1))/parameters.trainingSetSize);
+
+trainingSetData = data(skipLength:skipLength:end,:);
+trainingAmps = amps(skipLength:skipLength:end);
 
 
-%% Use subsampled t-SNE to find training set 
-
-fprintf(1,'Finding Training Set\n');
-[trainingSetData,trainingSetAmps,projectionFiles] = ...
-    runEmbeddingSubSampling(projectionsDirectory,parameters);
-
-%% Run t-SNE on training set
-
-
-fprintf(1,'Finding t-SNE Embedding for the Training Set\n');
+fprintf(1,'Finding t-SNE Embedding for Training Set\n');
 [trainingEmbedding,betas,P,errors] = run_tSne(trainingSetData,parameters);
 
 
-%% Find Embeddings for each file
+%% Find All Embeddings
 
-fprintf(1,'Finding t-SNE Embedding for each file\n');
+fprintf(1,'Finding t-SNE Embedding for all Data\n');
 embeddingValues = cell(L,1);
-for i=1:L
-    
-    fprintf(1,'\t Finding Embbeddings for File #%4i out of %4i\n',i,L);
-    
-    load(projectionFiles{i},'projections');
-    projections = projections(:,1:parameters.pcaModes);
-    
-    [embeddingValues{i},~] = ...
-        findEmbeddings(projections,trainingSetData,trainingEmbedding,parameters);
+i=1;
 
-    clear projections
-    
-end
+[embeddingValues{i},~] = findEmbeddings(data,trainingSetData,trainingEmbedding,parameters);
+
+
 
 %% Make density plots
-
 
 addpath(genpath('./t_sne/'));
 addpath(genpath('./utilities/'));
