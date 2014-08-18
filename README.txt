@@ -1,4 +1,4 @@
-This code represents a sample implementation of the MotionMapper behavioral analysis methods initially described in the paper “Mapping the stereotyped behaviour of freely-moving fruit flies” by Berman, GJ, Choi, DM, Bialek, W, and Shaevitz, JW.
+This code represents a sample implementation of the MotionMapper behavioral analysis methods initially described in the paper “Mapping the stereotyped behaviour of freely-moving fruit flies” by Berman, GJ, Choi, DM, Bialek, W, and Shaevitz, JW (Journal of the Royal Society, Interface, 11, 20140672).
 
 
 This MATLAB code is presented in order to provide a more explicit representation of the algorithms described in the article text.
