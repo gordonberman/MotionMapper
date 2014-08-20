@@ -13,6 +13,8 @@ This code was tested to perform properly using .avi movies of behaving flies, as
 
 Many aspects of the code are memory-limited, so adjusting run parameters in order to fit the specifics of your hardware will likely be necessary.  A listing of all parameters, their descriptions, and default values can be found in parameters.txt (Note: this is just a listing.  Altering parameter values within this file will NOT affect the algorithms).
 
+All that being said, if any questions/concerns/bugs arise, please feel free to email me (Gordon), and I will do my absolute best to answer/resolve them.
+
 *******
 
 
