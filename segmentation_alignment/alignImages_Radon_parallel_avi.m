@@ -47,6 +47,7 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     basisImage = parameters.basisImage;
     bodyThreshold = parameters.bodyThreshold;
     numProcessors = parameters.numProcessors;
+    rangeExtension = parameters.rangeExtension;
     
     %Choose starting and finishing images
     
@@ -78,14 +79,43 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     segmentationOptions.symLine = symLine;
     
     
-    %Area normalization
+    %Area normalization and (possibly) bodyThreshold finding
     
     idx = randi([startImage,nFrames],[parameters.areaNormalizationNumber,1]);
     basisSize = sum(basisImage(:)>0);
+    s = size(basisImage);
+    currentImageSet = uint8(zeros(s(1),s(2),parameters.areaNormalizationNumber));
+    parfor i=1:length(idx)
+        currentImageSet(:,:,i) = read(vidObj,idx(i));
+    end
+    
+    if bodyThreshold < 0   
+        T = zeros(length(idx),parameters.areaNormalizationNumber);
+        parfor i=1:length(idx)
+            [testImage,mask] = segmentImage_combo(currentImageSet(:,:,i),5,.05,[],[],[],1000,true);
+            if sum(mask(:)) > 1000
+                II = testImage(testImage>0);
+                T(i) = autoFindThreshold_gmm(II,3);
+            end
+        end
+        
+        T = T(T>0);
+        bodyThreshold = quantile(T,.25); 
+        parameters.bodyThreshold = bodyThreshold;
+         
+    end
+    
+    
+    if parameters.asymThreshold < 0
+        parameters.asymThreshold = parameters.bodyThreshold;
+        asymThreshold = parameters.asymThreshold;
+    end
+            
+     
     imageSizes = zeros(size(idx));
     for j = 1:parameters.areaNormalizationNumber
-        originalImage = read(vidObj,idx(j));
-        imageSizes(j) = sum(imcomplement(originalImage(:))>bodyThreshold);
+        a = currentImageSet(:,:,j);
+        imageSizes(j) = sum(imcomplement(a(:))>bodyThreshold);
     end
     imageSize = median(imageSizes);
     areanorm = sqrt(basisSize/imageSize);
@@ -108,8 +138,8 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     end
     
     [ii,~] = find(referenceImage > 0);
-    minRangeValue = min(ii) - 20;
-    maxRangeValue = max(ii) + 20;
+    minRangeValue = min(ii) - rangeExtension;
+    maxRangeValue = max(ii) + rangeExtension;
     
     segmentationOptions.referenceImage = referenceImage;
     segmentationOptions.minRangeValue = minRangeValue;
@@ -205,8 +235,7 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
             
             q = sum(b) ./ sum(b(:));
             asymValue = symLine - sum(q.*(1:s(1)));
-            
-            
+                        
             
             if asymValue < 0
                 

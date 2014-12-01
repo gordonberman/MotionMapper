@@ -37,7 +37,7 @@ function parameters = setRunParameters(parameters)
     %minimum area for use in image dilation/erosion
     minArea = 3500;
     
-    %asymmetry threshold used in eliminating rotational degeneracy
+    %asymmetry threshold used in eliminating rotational degeneracy (set to -1 for auto)
     asymThreshold = 150;
     
     %line about which directional symmetry is 
@@ -62,11 +62,19 @@ function parameters = setRunParameters(parameters)
     %toggle switch for image segmentation (alignment still performed)
     segmentationOff = false;
     
-    %threshold for seperating body from background
+    %threshold for seperating body from background (set to -1 for auto)
     bodyThreshold = 150;
 
     %number of images to test for image size estimation
-    areaNormalizationNumber = 200;
+    areaNormalizationNumber = 100;
+    
+    %range extension for flipping detector
+    rangeExtension = 20;
+    
+    %path to basis image
+    basisImagePath = 'segmentation_alignment/basisImage.tiff';
+    
+    
     
     
     
@@ -253,10 +261,11 @@ function parameters = setRunParameters(parameters)
     end
     
     
-    if ~isfield(parameters,'basisImage') || isempty(parameters.basisImage) 
-        parameters.basisImage = imread('./segmentation_alignment/basisImage.tiff');
+    if ~isfield(parameters,'basisImagePath') || isempty(parameters.basisImagePath) 
+        parameters.basisImagePath = basisImagePath;
     end
-
+    parameters.basisImage = imread(parameters.basisImagePath);
+    
 
     if ~isfield(parameters,'initialPhi') || isempty(parameters.initialPhi)
         parameters.initialPhi = initialPhi;
@@ -476,6 +485,11 @@ function parameters = setRunParameters(parameters)
     
     if ~isfield(parameters,'areaNormalizationNumber') || isempty(parameters.areaNormalizationNumber)
         parameters.areaNormalizationNumber = areaNormalizationNumber;
+    end
+    
+    
+    if ~isfield(parameters,'rangeExtension') || isempty(parameters.rangeExtension)
+        parameters.rangeExtension = rangeExtension;
     end
     
     
