@@ -29,7 +29,7 @@ alignmentDirectory = [filePath '/alignment_files/'];
 if ~exist(alignmentDirectory,'dir')
     mkdir(alignmentDirectory);
 end
-    
+
 
 %run alignment for all files in the directory
 fprintf(1,'Aligning Files\n');
