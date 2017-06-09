@@ -21,9 +21,6 @@ function projections = findProjections(filePath,vecs,meanValues,pixels,parameter
 %     Princeton University
 
     
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./PCA/'));
-    
     if nargin < 5
         parameters = [];
     end

@@ -1,5 +1,4 @@
-function [trainingSetData,trainingSetAmps,projectionFiles] = ...
-            runEmbeddingSubSampling(projectionDirectory,parameters)
+function [trainingSetData,trainingSetAmps,projectionFiles] = runEmbeddingSubSampling(projectionDirectory,parameters)
 %runEmbeddingSubSampling generates a training set given a set of .mat files
 %
 %   Input variables:
@@ -21,9 +20,7 @@ function [trainingSetData,trainingSetAmps,projectionFiles] = ...
 % (C) Gordon J. Berman, 2014
 %     Princeton University
     
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./t_sne/'));
-    
+
     if nargin < 2
         parameters = [];
     end

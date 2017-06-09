@@ -19,10 +19,6 @@ function outputStruct = runAlignment(fileName,outputPath,startImage,finalImage,p
 %     Princeton University
 
 
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./segmentation_alignment/'));
-    
-    
     if ~exist(outputPath,'dir')
         mkdir(outputPath);
     end

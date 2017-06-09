@@ -21,10 +21,6 @@ function [zValues,outputStatistics] = ...
 % (C) Gordon J. Berman, 2014
 %     Princeton University
 
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./t_sne/'));
-    
-    
     if nargin < 4
         parameters = [];
     end

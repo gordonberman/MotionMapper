@@ -19,12 +19,13 @@ All that being said, if any questions/concerns/bugs arise, please feel free to e
 
 
 
-1)	To run this code, you will first have to compile the associated mex files contained in this repository.  In order to do this, type
+1a)	To run this code, you will first have to compile the associated mex files contained in this repository.  In order to do this, type
 
 	compile_mex_files
 
 in the MATLAB command prompt from the main directory.  You will need to have your mex compiler properly set-up.
 
+1b) Add all directories to your path.
 
 2)	An example run-through of all the portions of the algorithm can be found in runExample.m.  Given a folder of .avi movies (specified as ‘filePath’ at the top of the aforementioned file), this will run through each of the steps in the algorithm.  It should be noted again that this code is not currently tested to work cross-platform or for any movies other than the ones presented in the original paper.
 

@@ -23,9 +23,6 @@ function [pixels,thetas,means,stDevs,vidObjs] = findRadonPixels(filePath,numToTe
 % (C) Gordon J. Berman, 2014
 %     Princeton University
 
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./PCA/'));
-    
     if nargin < 3
         parameters = [];
     end

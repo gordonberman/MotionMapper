@@ -18,9 +18,6 @@ function [amplitudes,f] = findWavelets(projections,numModes,parameters)
 %     Princeton University
 
     
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./wavelet/'));
-    
     if nargin < 3
         parameters = [];
     end

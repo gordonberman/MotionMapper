@@ -25,8 +25,6 @@ function [yData,signalData,signalIdx,signalAmps] = ...
     perplexity = parameters.training_perplexity;
     numPoints = parameters.training_numPoints;
     
-    addpath(genpath('./wavelet/'));
-    
     fprintf(1,'\t Loading Projections\n');
     load(projectionFile,'projections');
     
