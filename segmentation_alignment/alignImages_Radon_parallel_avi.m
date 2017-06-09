@@ -85,8 +85,9 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     basisSize = sum(basisImage(:)>0);
     s = size(basisImage);
     currentImageSet = uint8(zeros(s(1),s(2),parameters.areaNormalizationNumber));
-    parfor i=1:length(idx)
-        currentImageSet(:,:,i) = read(vidObj,idx(i));
+
+    parfor ii=1:length(idx)
+        currentImageSet(:,:,ii) = read(vidObj,idx(ii));
     end
     
     if bodyThreshold < 0   

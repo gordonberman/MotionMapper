@@ -26,15 +26,8 @@ function [zValues,outputStatistics] = ...
     end
     parameters = setRunParameters(parameters);
     
-    
-    
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
-    
+        
+    setup_parpool(parameters.numProcessors)
     
     
     d = length(trainingData(1,:));
@@ -79,5 +72,5 @@ function [zValues,outputStatistics] = ...
                                 
     
     if parameters.numProcessors > 1  && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end

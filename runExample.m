@@ -34,15 +34,15 @@ end
 %run alignment for all files in the directory
 fprintf(1,'Aligning Files\n');
 alignmentFolders = cell(L,1);
-for i=1:L    
+for ii=1:L    
     
-    fprintf(1,'\t Aligning File #%4i out of %4i\n',i,L);
+    fprintf(1,'\t Aligning File #%4i out of %4i\n',ii,L);
     
-    fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
+    fileNum = [repmat('0',1,numZeros-length(num2str(ii))) num2str(ii)];
     tempDirectory = [alignmentDirectory 'alignment_' fileNum '/'];
-    alignmentFolders{i} = tempDirectory;
+    alignmentFolders{ii} = tempDirectory;
     
-    outputStruct = runAlignment(imageFiles{i},tempDirectory,firstFrame,lastFrame,parameters);
+    outputStruct = runAlignment(imageFiles{ii},tempDirectory,firstFrame,lastFrame,parameters);
     
     save([tempDirectory 'outputStruct.mat'],'outputStruct');
     
@@ -178,16 +178,5 @@ end
 
 
 
-
-matlabpool close
-
-
-
-
-
-
-
-
-
-
+close_parpool
 

@@ -43,10 +43,10 @@ fprintf(1,'Aligning Files\n');
 alignmentFolders = cell(L,1);
 i=1;
 
-fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
+fileNum = [repmat('0',1,numZeros-length(num2str(ii))) num2str(ii)];
 tempDirectory = [alignmentDirectory 'alignment_' fileNum '/'];
-alignmentFolders{i} = tempDirectory;
-outputStruct = runAlignment(imageFiles{i},tempDirectory,firstFrame,lastFrame,parameters);
+alignmentFolders{ii} = tempDirectory;
+outputStruct = runAlignment(imageFiles{ii},tempDirectory,firstFrame,lastFrame,parameters);
 
 save([tempDirectory 'outputStruct.mat'],'outputStruct');
 
@@ -84,11 +84,11 @@ if ~exist(projectionsDirectory,'dir')
 end
 
 fprintf(1,'Finding Projections\n');
-i=1;
-projections = findProjections(alignmentFolders{i},vecs,meanValues,pixels,parameters);
+ii=1;
+projections = findProjections(alignmentFolders{ii},vecs,meanValues,pixels,parameters);
 
-fileNum = [repmat('0',1,numZeros-length(num2str(i))) num2str(i)];
-fileName = imageFiles{i};
+fileNum = [repmat('0',1,numZeros-length(num2str(ii))) num2str(ii)];
+fileName = imageFiles{ii};
 
 save([projectionsDirectory 'projections_' fileNum '.mat'],'projections','fileName');
 
@@ -118,7 +118,7 @@ fprintf(1,'Finding t-SNE Embedding for all Data\n');
 embeddingValues = cell(L,1);
 i=1;
 
-[embeddingValues{i},~] = findEmbeddings(data,trainingSetData,trainingEmbedding,parameters);
+[embeddingValues{ii},~] = findEmbeddings(data,trainingSetData,trainingEmbedding,parameters);
 
 
 
@@ -138,7 +138,7 @@ rangeVals = [-maxVal maxVal];
 
 densities = zeros(numPoints,numPoints,L);
 for i=1:L
-    [~,densities(:,:,i)] = findPointDensity(embeddingValues{i},sigma,numPoints,rangeVals);
+    [~,densities(:,:,ii)] = findPointDensity(embeddingValues{ii},sigma,numPoints,rangeVals);
 end
 
 
@@ -158,26 +158,15 @@ N = ceil(sqrt(L));
 M = ceil(L/N);
 maxDensity = max(densities(:));
 for i=1:L
-    subplot(M,N,i)
-    imagesc(xx,xx,densities(:,:,i))
+    subplot(M,N,ii)
+    imagesc(xx,xx,densities(:,:,ii))
     axis equal tight off xy
     caxis([0 maxDensity * .8])
     colormap(jet)
-    title(['Data Set #' num2str(i)],'fontsize',12,'fontweight','bold');
+    title(['Data Set #' num2str(ii)],'fontsize',12,'fontweight','bold');
 end
 
 
 
-
-matlabpool close
-
-
-
-
-
-
-
-
-
-
+close_parpool
 

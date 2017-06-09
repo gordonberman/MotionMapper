@@ -27,13 +27,7 @@ function projections = findProjections(filePath,vecs,meanValues,pixels,parameter
     parameters = setRunParameters(parameters);
     
     
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
-    
+    setup_parpool(parameters.numProcessors)    
     
     %files = findAllImagesInFolders(filePath,'tiff');
     %N = length(files);
@@ -67,7 +61,7 @@ function projections = findProjections(filePath,vecs,meanValues,pixels,parameter
     
         
     if parameters.numProcessors > 1  && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end
     
     

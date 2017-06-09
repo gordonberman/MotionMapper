@@ -26,15 +26,8 @@ function [trainingSetData,trainingSetAmps,projectionFiles] = runEmbeddingSubSamp
     end
     parameters = setRunParameters(parameters);
     
-    
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
-    
-    
+    setup_parpool(parameters.numProcessors)
+
     
     projectionFiles = findAllImagesInFolders(projectionDirectory,'.mat');
     
@@ -67,5 +60,5 @@ function [trainingSetData,trainingSetAmps,projectionFiles] = runEmbeddingSubSamp
     
     
     if parameters.numProcessors > 1  && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end
