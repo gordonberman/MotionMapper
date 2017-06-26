@@ -23,21 +23,14 @@ function [pixels,thetas,means,stDevs,vidObjs] = findRadonPixels(filePath,numToTe
 % (C) Gordon J. Berman, 2014
 %     Princeton University
 
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./PCA/'));
-    
     if nargin < 3
         parameters = [];
     end
     parameters = setRunParameters(parameters);
     
     
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
+    setup_parpool(parameters.numProcessors)
+
     
     numThetas = parameters.num_Radon_Thetas;
     spacing = 180/numThetas;
@@ -80,6 +73,6 @@ function [pixels,thetas,means,stDevs,vidObjs] = findRadonPixels(filePath,numToTe
     
     
     if parameters.numProcessors > 1 && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end
     

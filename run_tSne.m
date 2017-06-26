@@ -19,10 +19,6 @@ function [yData,betas,P,errors] = run_tSne(data,parameters)
 % (C) Gordon J. Berman, 2014
 %     Princeton University
 
-
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./t_sne/'));
-    
     if nargin < 2
         parameters = [];
     end

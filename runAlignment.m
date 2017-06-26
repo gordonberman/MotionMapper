@@ -19,10 +19,6 @@ function outputStruct = runAlignment(fileName,outputPath,startImage,finalImage,p
 %     Princeton University
 
 
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./segmentation_alignment/'));
-    
-    
     if ~exist(outputPath,'dir')
         mkdir(outputPath);
     end
@@ -45,13 +41,8 @@ function outputStruct = runAlignment(fileName,outputPath,startImage,finalImage,p
     parameters = setRunParameters(parameters);
     
     
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
-    
+    setup_parpool(parameters.numProcessors)
+
     
     [Xs,Ys,angles,areas,~,framesToCheck,svdskipped,areanorm] = ...
         alignImages_Radon_parallel_avi(fileName,startImage,finalImage,...
@@ -70,7 +61,7 @@ function outputStruct = runAlignment(fileName,outputPath,startImage,finalImage,p
     
     
     if parameters.numProcessors > 1 && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end
     
     

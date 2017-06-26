@@ -21,22 +21,14 @@ function [vecs,vals,meanValue] = findPosturalEigenmodes(filePath,pixels,paramete
 %     Princeton University
 
     
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./PCA/'));
-    
     if nargin < 3
         parameters = [];
     end
     parameters = setRunParameters(parameters);
     
     
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
-    
+    setup_parpool(parameters.numProcessors)
+
     
     if iscell(filePath)
         
@@ -67,5 +59,5 @@ function [vecs,vals,meanValue] = findPosturalEigenmodes(filePath,pixels,paramete
     
     
     if parameters.numProcessors > 1 && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end

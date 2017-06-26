@@ -84,9 +84,15 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
     idx = randi([startImage,nFrames],[parameters.areaNormalizationNumber,1]);
     basisSize = sum(basisImage(:)>0);
     s = size(basisImage);
+
+    temp=vidObj.read(idx(1));
+    if size(temp,3)>1
+        fprintf('WARNING: your movie is RGB. Likely this will cause a failure.\n')
+    end
     currentImageSet = uint8(zeros(s(1),s(2),parameters.areaNormalizationNumber));
-    parfor i=1:length(idx)
-        currentImageSet(:,:,i) = read(vidObj,idx(i));
+
+    parfor ii=1:length(idx)
+        currentImageSet(:,:,ii) = vidObj.read(idx(ii));
     end
     
     if bodyThreshold < 0   

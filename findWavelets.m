@@ -18,9 +18,6 @@ function [amplitudes,f] = findWavelets(projections,numModes,parameters)
 %     Princeton University
 
     
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./wavelet/'));
-    
     if nargin < 3
         parameters = [];
     end
@@ -37,12 +34,8 @@ function [amplitudes,f] = findWavelets(projections,numModes,parameters)
     end
     
     
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
+    setup_parpool(parameters.numProcessors)
+
     
     
     omega0 = parameters.omega0;
@@ -64,7 +57,7 @@ function [amplitudes,f] = findWavelets(projections,numModes,parameters)
     
     
     if parameters.numProcessors > 1 && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end
     
     

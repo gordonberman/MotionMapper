@@ -21,24 +21,13 @@ function [zValues,outputStatistics] = ...
 % (C) Gordon J. Berman, 2014
 %     Princeton University
 
-    addpath(genpath('./utilities/'));
-    addpath(genpath('./t_sne/'));
-    
-    
     if nargin < 4
         parameters = [];
     end
     parameters = setRunParameters(parameters);
     
-    
-    
-    if matlabpool('size') ~= parameters.numProcessors;
-        matlabpool close force
-        if parameters.numProcessors > 1
-            matlabpool(parameters.numProcessors);
-        end
-    end
-    
+        
+    setup_parpool(parameters.numProcessors)
     
     
     d = length(trainingData(1,:));
@@ -83,5 +72,5 @@ function [zValues,outputStatistics] = ...
                                 
     
     if parameters.numProcessors > 1  && parameters.closeMatPool
-        matlabpool close
+        close_parpool
     end
