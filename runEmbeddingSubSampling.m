@@ -39,6 +39,7 @@ function [trainingSetData,trainingSetAmps,projectionFiles] = runEmbeddingSubSamp
      
     trainingSetData = zeros(numPerDataSet*L,numModes*numPeriods);
     trainingSetAmps = zeros(numPerDataSet*L,1);
+    useIdx = true(numPerDataSet*L,1);
     
     for i=1:L
         
@@ -54,10 +55,14 @@ function [trainingSetData,trainingSetAmps,projectionFiles] = runEmbeddingSubSamp
             findTemplatesFromData(signalData,yData,signalAmps,...
                                 numPerDataSet,parameters);
             
-            
+        a = sum(trainingSetData(currentIdx,:),2) == 0;
+        useIdx(currentIdx(a)) = false;
+                                                        
     end
     
-    
+    trainingSetData = trainingSetData(useIdx,:);
+    trainingSetAmps = trainingSetAmps(useIdx);
+        
     
     if parameters.numProcessors > 1  && parameters.closeMatPool
         close_parpool

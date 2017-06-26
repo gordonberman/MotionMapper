@@ -87,12 +87,20 @@ function [Xs,Ys,angles,areas,parameters,framesToCheck,svdskipped,areanorm] = ...
 
     temp=vidObj.read(idx(1));
     if size(temp,3)>1
-        fprintf('WARNING: your movie is RGB. Likely this will cause a failure.\n')
+        IS_RGB = true;
+        fprintf('WARNING: your movie is RGB. Using only R channel for processing.\n')
+    else
+        IS_RGB = false;
     end
     currentImageSet = uint8(zeros(s(1),s(2),parameters.areaNormalizationNumber));
 
     parfor ii=1:length(idx)
-        currentImageSet(:,:,ii) = vidObj.read(idx(ii));
+        temp = vidObj.read(idx(ii));
+        if IS_RGB
+            currentImageSet(:,:,ii) = temp(:,:,1);
+        else
+            currentImageSet(:,:,ii) = temp;
+        end
     end
     
     if bodyThreshold < 0   

@@ -6,6 +6,10 @@ moviePath = '';
 
 %add utilities folder to path
 addpath(genpath('./utilities/'));
+addpath(genpath('./PCA/'));
+addpath(genpath('./segmentation_alignment/'));
+addpath(genpath('./t_sne/'));
+addpath(genpath('./wavelet/'));
 
 %set file path
 [filePath,fileName,~] = fileparts(moviePath);
@@ -41,7 +45,7 @@ end
 %run alignment for all files in the directory
 fprintf(1,'Aligning Files\n');
 alignmentFolders = cell(L,1);
-i=1;
+ii=1;
 
 fileNum = [repmat('0',1,numZeros-length(num2str(ii))) num2str(ii)];
 tempDirectory = [alignmentDirectory 'alignment_' fileNum '/'];
@@ -124,8 +128,6 @@ i=1;
 
 %% Make density plots
 
-addpath(genpath('./t_sne/'));
-addpath(genpath('./utilities/'));
 
 maxVal = max(max(abs(combineCells(embeddingValues))));
 maxVal = round(maxVal * 1.1);

@@ -6,6 +6,10 @@ filePath = '';
 
 %add utilities folder to path
 addpath(genpath('./utilities/'));
+addpath(genpath('./PCA/'));
+addpath(genpath('./segmentation_alignment/'));
+addpath(genpath('./t_sne/'));
+addpath(genpath('./wavelet/'));
 
 %find all avi files in 'filePath'
 imageFiles = findAllImagesInFolders(filePath,'.avi');
@@ -134,8 +138,6 @@ end
 %% Make density plots
 
 
-addpath(genpath('./t_sne/'));
-addpath(genpath('./utilities/'));
 
 maxVal = max(max(abs(combineCells(embeddingValues))));
 maxVal = round(maxVal * 1.1);

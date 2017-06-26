@@ -26,7 +26,7 @@ function [signalData,signalAmps] = findTemplatesFromData(...
     sumVal = sum(numInGroup);
     if sumVal < numPerDataSet
         q = numPerDataSet - sumVal;
-        idx = randperm(N,q);
+        idx = randperm(N,min(q,N));
         numInGroup(idx) = numInGroup(idx) + 1;
     else
         if sumVal > numPerDataSet
@@ -40,10 +40,12 @@ function [signalData,signalAmps] = findTemplatesFromData(...
             numInGroup(idx2(idx)) = numInGroup(idx2(idx)) - 1;
         end
     end
+    idx = numInGroup > templateLengths;
+    numInGroup(idx) = templateLengths(idx);
     cumSumGroupVals = [0; cumsum(numInGroup)];
     
     
-    for j=1:N;
+    for j=1:N
         
         amps = signalAmps(vals == j);
         

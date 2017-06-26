@@ -30,7 +30,7 @@ function [zValues,outputStatistics] = ...
     setup_parpool(parameters.numProcessors)
     
     
-    d = length(trainingData(1,:));
+    d = length(projections(1,:));
     numModes = parameters.pcaModes;
     numPeriods = parameters.numPeriods;
     
