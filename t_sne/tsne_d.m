@@ -49,6 +49,7 @@ function [yData,betas,P,errors] = tsne_d(D, parameters)
     
     D = D / max(D(:));                                                      
     [P,betas] = d2p_sparse(D .^ 2, perplexity, sigmaTolerance);                                     
+    P(isnan(P)) = 0;
     
     clear D
     
