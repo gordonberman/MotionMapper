@@ -47,11 +47,12 @@ function [signalData,signalAmps] = findTemplatesFromData(...
     
     for j=1:N
         
-        amps = signalAmps(vals == j);
-        
-        idx2 = randperm(length(templates{j}(:,1)),numInGroup(j));
-        selectedData(cumSumGroupVals(j)+1:cumSumGroupVals(j+1),:) = templates{j}(idx2,:);
-        selectedAmps(cumSumGroupVals(j)+1:cumSumGroupVals(j+1)) = amps(idx2);
+        if cumSumGroupVals(j+1) > cumSumGroupVals(j)
+            amps = signalAmps(vals == j);
+            idx2 = randperm(length(templates{j}(:,1)),numInGroup(j));
+            selectedData(cumSumGroupVals(j)+1:cumSumGroupVals(j+1),:) = templates{j}(idx2,:);
+            selectedAmps(cumSumGroupVals(j)+1:cumSumGroupVals(j+1)) = amps(idx2);
+        end
         
     end
     
