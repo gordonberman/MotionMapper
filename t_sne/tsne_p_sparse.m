@@ -103,7 +103,7 @@ function [ydata,errors] = tsne_p_sparse(P, parameters, no_dims, relTol)
     for iter=1:max_iter
         
         %find distances
-        Q = 1 ./ (1 + findAllDistances(ydata).^2);
+        Q = 1 ./ (1 + squareform(pdist(ydata)).^2);
         Q(1:n+1:end) = 0;
         Z = sum(Q(:));
         Q = Q./Z;
