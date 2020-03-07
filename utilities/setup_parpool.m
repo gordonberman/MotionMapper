@@ -14,7 +14,7 @@ function setup_parpool(desiredPoolSize)
 
 
     % Is the parallel computing toolbox installed?
-    if isempty(ver('distcomp'))
+    if isempty(ver('parallel'))
         fprintf('No parallel computing toolbox installed\n')
         return
     end
