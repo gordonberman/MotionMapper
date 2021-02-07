@@ -30,7 +30,9 @@ function [sigma,p] = returnCorrectSigma_sparse(ds,perplexity,tol,maxNeighbors)
     else
         test = true;
     end
-    
+    if isinf(sigma) || isnan(sigma)
+        error('Starting sigma is %0.02f, highGuess is %0.02f and lowGuess is %0.02f. This usually means there are zeros in wavelet amplitudes, could be present in trainingSet too.', sigma, highGuess, lowGuess)
+    end
     while test
         
         if P > perplexity
